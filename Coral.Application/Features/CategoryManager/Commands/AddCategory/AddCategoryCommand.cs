@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Coral.Application.Features.CategoryManager.Commands
+namespace Coral.Application.Features.CategoryManager.Commands.AddCategory
 {
     public record AddCategoryCommand(string CategoryName) : IRequest<ErrorOr<AddCategoryResponse>>;
 
@@ -23,7 +23,7 @@ namespace Coral.Application.Features.CategoryManager.Commands
         }
         public async Task<ErrorOr<AddCategoryResponse>> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
         {
-            var response = await _categoryRepository.Add(new Domain.Category()
+            var response = await _categoryRepository.Add(new Category()
             {
                 Name = request.CategoryName
             }, cancellationToken);

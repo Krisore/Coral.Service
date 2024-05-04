@@ -1,4 +1,5 @@
-﻿using Coral.Application.Commons.Repositories;
+﻿using Azure;
+using Coral.Application.Commons.Repositories;
 using Coral.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -27,6 +28,16 @@ namespace Coral.Infrastructure.Persistent.Repositories
                 await _context.SaveChangesAsync();
             }
             return await _categories.FirstOrDefaultAsync(x => x.Name.Equals(category!.Name)) ?? new Category();
+        }
+
+        public async Task<bool> DeleteCategoryAsync(string categoryName, CancellationToken cancellation)
+        {
+
+            var result = await _categories.FirstOrDefaultAsync(x => x.Name.Equals(categoryName));
+            if (result is null) return false;
+            _categories.Remove(result);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> FindAsync(string categoryName, CancellationToken cancellationToken)
@@ -59,7 +70,7 @@ namespace Coral.Infrastructure.Persistent.Repositories
                 Name = category.Name
 
             }).FirstOrDefaultAsync(category => category.Name.Equals(categoryName));
-            if (response == null)
+            if (response == null || string.IsNullOrEmpty(response.Name))
                 return new Category();
             return response;
         }

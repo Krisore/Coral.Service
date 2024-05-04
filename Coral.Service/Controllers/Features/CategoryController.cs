@@ -1,4 +1,6 @@
 ﻿using Coral.Application.Features.CategoryManager.Commands;
+using Coral.Application.Features.CategoryManager.Commands.AddCategory;
+using Coral.Application.Features.CategoryManager.Commands.DeleteCategory;
 using Coral.Application.Features.CategoryManager.Queries.GetCategories;
 using Coral.Application.Features.CategoryManager.Queries.GetCategoryByName;
 using Coral.Contract.Category.Request;
@@ -6,7 +8,6 @@ using Coral.Contract.Category.Response;
 using ErrorOr;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Coral.Service.Controllers.Features;
 
@@ -40,5 +41,17 @@ public class CategoryController : BasedApiController
         return response.Match<IActionResult>(
                 response => Ok(response),
                 errors => Problem(errors));
+    }
+
+
+    [HttpDelete("Remove")]
+
+    public async Task<IActionResult> RemoveCategoryAsync([FromQuery] DeleteCategoryRequest request)
+    {
+        var command = new DeleteCategoryCommand(request.CategoryName);
+        var response = await Mediator.Send(command);
+        return response.Match<IActionResult>(
+            response => Ok(response),
+            errors => Problem(errors));
     }
 }

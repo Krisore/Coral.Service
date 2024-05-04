@@ -10,8 +10,10 @@ namespace Coral.Application.Commons.Repositories
     public interface ICategoryRepository
     {
         Task<Category> Add(Category category, CancellationToken cancellation);
-        Task<bool> FindAsync(string categoryName, CancellationToken cancellationToken);
+        Task<bool> FindAsync(string categoryName, CancellationToken cancellation);
         Task<IEnumerable<Category>> GetCategoriesAsync( CancellationToken cancellation);
         Task<Category> GetCategoryAsync(string categoryName, CancellationToken cancellation);
+
+        Task<bool> DeleteCategoryAsync(string categoryName, CancellationToken cancellation);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Coral.Application.Commons.Repositories;
-using Coral.Application.Features.CategoryManager.Commands;
+using Coral.Application.Features.CategoryManager.Commands.AddCategory;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

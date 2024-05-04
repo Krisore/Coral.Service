@@ -24,7 +24,7 @@ public class GetCategoryByNameQueryHandler : IRequestHandler<GetCategoryByNameQu
     public async Task<ErrorOr<CategoryDto>> Handle(GetCategoryByNameQuery request, CancellationToken cancellationToken)
     {
         var response = await _categoryRepository.GetCategoryAsync(request.CategoryName, cancellationToken);
-        if (response is null)
+        if (response is null || string.IsNullOrEmpty(response.Name))
             return Error.NotFound("Category does'nt Exist");
         return new CategoryDto()
         {
