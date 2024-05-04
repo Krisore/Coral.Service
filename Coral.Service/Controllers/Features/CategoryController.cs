@@ -1,6 +1,7 @@
 ﻿using Coral.Application.Features.CategoryManager.Commands;
 using Coral.Application.Features.CategoryManager.Commands.AddCategory;
 using Coral.Application.Features.CategoryManager.Commands.DeleteCategory;
+using Coral.Application.Features.CategoryManager.Commands.UpdateCategory;
 using Coral.Application.Features.CategoryManager.Queries.GetCategories;
 using Coral.Application.Features.CategoryManager.Queries.GetCategoryByName;
 using Coral.Contract.Category.Request;
@@ -13,15 +14,6 @@ namespace Coral.Service.Controllers.Features;
 
 public class CategoryController : BasedApiController
 {
-    [HttpPost("Create")]
-    public async Task<IActionResult> AddCategoryAsync([FromQuery] AddCategoryRequest request)
-    {
-        var command = new AddCategoryCommand(request.Name);
-        var response = await Mediator.Send(command);
-        return response.Match<IActionResult>(
-            response => Ok(response),
-            errors => Problem(errors));
-    }
 
     [HttpGet("GetCategories")] 
     public async Task<IActionResult> GetCategoriesAsync()
@@ -53,5 +45,23 @@ public class CategoryController : BasedApiController
         return response.Match<IActionResult>(
             response => Ok(response),
             errors => Problem(errors));
+    }
+    [HttpPost("Create")]
+    public async Task<IActionResult> AddCategoryAsync([FromQuery] AddCategoryRequest request)
+    {
+        var command = new AddCategoryCommand(request.Name);
+        var response = await Mediator.Send(command);
+        return response.Match<IActionResult>(
+            response => Ok(response),
+            errors => Problem(errors));
+    }
+    [HttpPut("Update")]
+    public async Task<IActionResult> UpdateCategoryAsync([FromBody] UpdateCategoryRequest request)
+    {
+        var command = new UpdateCategoryCommand(request.CategoryName, request.CategoryId);
+        var response = await Mediator.Send(command);
+        return response.Match<IActionResult>(
+             response => Ok(response),
+             errors => Problem(errors));
     }
 }

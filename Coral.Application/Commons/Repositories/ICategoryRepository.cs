@@ -15,5 +15,6 @@ namespace Coral.Application.Commons.Repositories
         Task<Category> GetCategoryAsync(string categoryName, CancellationToken cancellation);
 
         Task<bool> DeleteCategoryAsync(string categoryName, CancellationToken cancellation);
+        Task<Category> UpdateCategoryName(string categoryName, int categoryId, CancellationToken cancellationToken);
     }
 }

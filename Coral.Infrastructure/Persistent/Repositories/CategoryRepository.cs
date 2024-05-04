@@ -27,15 +27,15 @@ namespace Coral.Infrastructure.Persistent.Repositories
                 await _categories.AddAsync(category);
                 await _context.SaveChangesAsync();
             }
-            return await _categories.FirstOrDefaultAsync(x => x.Name.Equals(category!.Name)) ?? new Category();
+            return await _categories.FirstOrDefaultAsync(x => x.Name.Equals(category!.Name)) ?? null!;
         }
 
         public async Task<bool> DeleteCategoryAsync(string categoryName, CancellationToken cancellation)
         {
 
-            var result = await _categories.FirstOrDefaultAsync(x => x.Name.Equals(categoryName));
-            if (result is null) return false;
-            _categories.Remove(result);
+            var category = await _categories.FirstOrDefaultAsync(x => x.Name.Equals(categoryName));
+            if (category is null) return false;
+            _categories.Remove(category);
             await _context.SaveChangesAsync();
             return true;
         }
@@ -52,27 +52,41 @@ namespace Coral.Infrastructure.Persistent.Repositories
 
         public async Task<IEnumerable<Category>> GetCategoriesAsync(CancellationToken cancellation)
         {
-            var response = await _categories.Select(x => 
+            var catories = await _categories.Select(x => 
             new Category() 
             {
                 Id = x.Id, 
                 Name = x.Name 
             }).ToListAsync();
 
-            return response;
+            return catories;
         }
 
         public async Task<Category> GetCategoryAsync(string categoryName, CancellationToken cancellation)
         {
-            var response = await _categories.Select(category => new Category()
+            var category = await _categories.Select(category => new Category()
             {
                 Id = category.Id,
                 Name = category.Name
 
             }).FirstOrDefaultAsync(category => category.Name.Equals(categoryName));
-            if (response == null || string.IsNullOrEmpty(response.Name))
+            if (category == null || string.IsNullOrEmpty(category.Name))
                 return new Category();
-            return response;
+            return category;
+        }
+
+        public async Task<Category> UpdateCategoryName(string categoryName, int categoryId, CancellationToken cancellationToken)
+        {
+            var category = await _categories.FirstOrDefaultAsync(x => x.Id == categoryId);
+            if(category is not null)
+            {
+                category.Name = categoryName;
+                _categories.Update(category);
+                await _context.SaveChangesAsync();
+                return category;
+
+            }
+            return null!;
         }
     }
 }
