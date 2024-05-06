@@ -10,16 +10,11 @@ using System.Threading.Tasks;
 
 namespace Coral.Infrastructure.Persistent.Repositories
 {
-    public class CategoryRepository : ICategoryRepository
+    public class CategoryRepository(ApplicationDbContext context) : ICategoryRepository
     {
-        private readonly DbSet<Category> _categories;
-        private readonly ApplicationDbContext _context;
+        private readonly DbSet<Category> _categories = context.Categories;
+        private readonly ApplicationDbContext _context = context;
 
-        public CategoryRepository(ApplicationDbContext context)
-        {
-            _categories = context.Categories;
-            _context = context;
-        }
         public async Task<Category> Add(Category category, CancellationToken cancellation)
         {
             if(category != null)

@@ -1,5 +1,5 @@
 ﻿using Coral.Application.Commons.Repositories;
-using Coral.Application.Features.CategoryManager.Commands.AddCategory;
+using Coral.Application.Features.CategoryManager.Commands.CreateCategory;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Coral.Application.Features.CategoryManager.Validators
 {
-    public class AddCategoryValidator : AbstractValidator<AddCategoryCommand>
+    public class CreateCategoryValidator : AbstractValidator<CreateCategoryCommand>
     {
         private readonly ICategoryRepository _categoryRepository;
 
-        public AddCategoryValidator(ICategoryRepository categoryRepository)
+        public CreateCategoryValidator(ICategoryRepository categoryRepository)
         {
             _categoryRepository = categoryRepository;
             RuleFor(x => x.CategoryName)

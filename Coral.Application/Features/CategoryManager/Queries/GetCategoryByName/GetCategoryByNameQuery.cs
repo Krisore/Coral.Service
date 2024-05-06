@@ -25,7 +25,7 @@ public class GetCategoryByNameQueryHandler : IRequestHandler<GetCategoryByNameQu
     {
         var response = await _categoryRepository.GetCategoryAsync(request.CategoryName, cancellationToken);
         if (response is null || string.IsNullOrEmpty(response.Name))
-            return Error.NotFound("Category does'nt Exist");
+            return Error.NotFound("Category not found!");
         return new CategoryDto()
         {
             Id = response.Id,

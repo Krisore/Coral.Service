@@ -19,6 +19,7 @@ public static class Program
 
 
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ITagRepository, TagRepository>();
         return services;
     }
 }

@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Coral.Contract.Category.Request
 {
-    public record UpdateCategoryRequest(string CategoryName, int CategoryId);
+    public record UpdateCategoryRequest(int Id, string Name);
 }

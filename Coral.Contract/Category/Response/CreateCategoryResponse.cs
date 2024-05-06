@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Coral.Contract.Category.Response
 {
-    public class AddCategoryResponse
+    public class CreateCategoryResponse
     {
         public required string Message { get; set; }
     }

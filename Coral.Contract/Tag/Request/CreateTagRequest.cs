@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Coral.Contract.Category.Request
+namespace Coral.Contract.Tag.Request
 {
-    public record DeleteCategoryRequest(string name);
+    public record CreateTagRequest(string name, string description = "");
 }

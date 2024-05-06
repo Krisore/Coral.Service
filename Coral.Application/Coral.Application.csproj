@@ -14,8 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\BudgetManager\Commands\" />
+    <Folder Include="Features\BudgetManager\Validators\" />
+    <Folder Include="Features\BudgetManager\Queries\" />
     <Folder Include="Features\ExpenseManager\Queries\" />
-    <Folder Include="Features\BudgetManager\" />
+    <Folder Include="Features\TagManager\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

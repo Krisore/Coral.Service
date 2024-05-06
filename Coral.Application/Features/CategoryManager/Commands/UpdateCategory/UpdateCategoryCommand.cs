@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Coral.Application.Features.CategoryManager.Commands.UpdateCategory;
 
-public record UpdateCategoryCommand(string CategoryName, int CategoryId) : IRequest<ErrorOr<UpdateCategoryResponse>>;
+public record UpdateCategoryCommand(int CategoryId, string CategoryName) : IRequest<ErrorOr<UpdateCategoryResponse>>;
 
 public class UpdateCategoryCommandHanlder : IRequestHandler<UpdateCategoryCommand, ErrorOr<UpdateCategoryResponse>>
 {
