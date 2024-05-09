@@ -19,7 +19,7 @@ namespace Coral.Application.Features.CategoryManager.Validators
             RuleFor(x => x.CategoryName)
                 .NotEmpty()
                 .MustAsync(CheckCategory)
-                .WithMessage("Category name already exists.");
+                .WithMessage("Category already exists.");
         }
 
 

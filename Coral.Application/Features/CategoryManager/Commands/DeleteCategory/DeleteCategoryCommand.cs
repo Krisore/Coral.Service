@@ -25,7 +25,7 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
     }
     public async Task<ErrorOr<DeleteCategoryResponse>> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
     {
-        var response = await _categoryRepository.DeleteCategoryAsync(request.categoryName, cancellationToken);
+        var response = await _categoryRepository.DeleteCategoryAsync(request.categoryName.ToUpper(), cancellationToken);
         if(response is false)
         {
             return Error.NotFound($"No Category Found named {request.categoryName}!");

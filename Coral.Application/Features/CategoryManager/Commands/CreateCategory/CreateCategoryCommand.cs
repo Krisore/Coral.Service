@@ -25,8 +25,8 @@ public class AddCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, 
     {
         var response = await _categoryRepository.Add(new Category()
         {
-            Name = request.CategoryName
-        }, cancellationToken);
+            Name = request.CategoryName.ToUpper()
+        }, cancellationToken) ;
 
         if (response == null)
         {

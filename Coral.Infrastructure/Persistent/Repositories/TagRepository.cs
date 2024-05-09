@@ -45,17 +45,28 @@ namespace Coral.Infrastructure.Persistent.Repositories
             return false;
         }
 
-        public Task<IEnumerable<Tag>> GetTagsAsync(CancellationToken cancellation)
+        public async Task<IEnumerable<Tag>> GetTagsAsync(CancellationToken cancellation) => 
+            await _tags.Select(x =>
+                   new Tag()
+                   {
+                       Id = x.Id,
+                       Name = x.Name
+
+                   }).ToListAsync();
+        public async Task<Tag> GetTagByNameAsync(string name, CancellationToken cancellation)
         {
-            throw new NotImplementedException();
+            var tag = await _tags.Select(x => new Tag()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description
+
+            }).FirstOrDefaultAsync(x => x.Name.Equals(name));
+            if(tag is null|| string.IsNullOrEmpty(tag.Name)) return new Tag();
+            return tag;
         }
 
-        public Task<Tag> GetTagByNameAsync(string name, CancellationToken cancellation)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Tag> UpdateTagAsync(string name, int categoryId, CancellationToken cancellation)
+        public Task<Tag> UpdateTagAsync(string name, int tagId, CancellationToken cancellation)
         {
             throw new NotImplementedException();
         }

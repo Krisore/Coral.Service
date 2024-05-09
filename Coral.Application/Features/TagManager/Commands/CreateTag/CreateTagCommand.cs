@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Coral.Application.Features.TagManager.Commands.CreateTag;
 
-public record CreateTagCommand(string name, string description = "")
+public record CreateTagCommand(string Name, string Description = "")
     : IRequest<ErrorOr<CreateTagResponse>>;
 
 public class AddTagCommandHandler : IRequestHandler<CreateTagCommand, ErrorOr<CreateTagResponse>>
@@ -26,8 +26,8 @@ public class AddTagCommandHandler : IRequestHandler<CreateTagCommand, ErrorOr<Cr
     {
         var response = await _tagRepository.AddAsync(new Tag()
         {
-            Name = request.name,
-            Description = request.description
+            Name = request.Name.ToUpper(),
+            Description = request.Description
 
         }, cancellationToken);
 

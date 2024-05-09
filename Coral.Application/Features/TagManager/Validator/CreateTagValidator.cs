@@ -16,14 +16,17 @@ namespace Coral.Application.Features.TagManager.Validator
         public CreateTagValidator(ITagRepository tagRepository)
         {
             _tagRepository = tagRepository;
-            RuleFor(x => x.name).NotEmpty().NotNull();
+            RuleFor(x => x.Name)
+                .NotEmpty().MustAsync(CheckTag)
+                .WithMessage("Tag already exists.");
+
         }
 
 
         public async Task<bool> CheckTag(string name, CancellationToken cancellation)
         {
             var tagIsExist = await _tagRepository.FindAsync(name, cancellation);
-            return tagIsExist == false;
+            return !tagIsExist;
         }
     }
 }

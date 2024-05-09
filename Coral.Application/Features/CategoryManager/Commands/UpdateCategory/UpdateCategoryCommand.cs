@@ -23,7 +23,7 @@ public class UpdateCategoryCommandHanlder : IRequestHandler<UpdateCategoryComman
     }
     public async Task<ErrorOr<UpdateCategoryResponse>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {
-        var response = await _categoryRepository.UpdateCategoryName(request.CategoryName, request.CategoryId, cancellationToken);
+        var response = await _categoryRepository.UpdateCategoryName(request.CategoryName.ToUpper(), request.CategoryId, cancellationToken);
         if (response is null) 
             return Error.NotFound($"{nameof(Category)} : {request.CategoryName} is not found!");
 

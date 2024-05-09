@@ -18,7 +18,8 @@
     <Folder Include="Features\BudgetManager\Validators\" />
     <Folder Include="Features\BudgetManager\Queries\" />
     <Folder Include="Features\ExpenseManager\Queries\" />
-    <Folder Include="Features\TagManager\Queries\" />
+    <Folder Include="Features\TagManager\Commands\DeleteTag\" />
+    <Folder Include="Features\TagManager\Commands\UpdateTag\" />
   </ItemGroup>
 
   <ItemGroup>
