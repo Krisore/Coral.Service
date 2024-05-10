@@ -13,7 +13,7 @@ public class Expense
     public decimal Amount { get; set; }
     public DateTime Date { get; set; }
     public int CategoryId { get; set; }
-    public Category Category { get; set; } = default!;
+    public virtual Category Category { get; set; } = default!;
     public int BudgetId { get; set; }
-    public Budget Budget { get; set; } = default!;
+    public virtual Budget Budget { get; set; } = default!;
 }

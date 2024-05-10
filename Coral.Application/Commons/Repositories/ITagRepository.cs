@@ -15,6 +15,6 @@ namespace Coral.Application.Commons.Repositories
         Task<Tag> GetTagByNameAsync(string name, CancellationToken cancellation);
 
         Task<bool> DeleteTagAsync(string name, CancellationToken cancellation);
-        Task<Tag> UpdateTagAsync(string name, int tagId, CancellationToken cancellation);
+        Task<Tag> UpdateTagAsync(Tag tag, CancellationToken cancellation);
     }
 }

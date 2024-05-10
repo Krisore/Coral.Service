@@ -1,11 +1,6 @@
 ﻿using Coral.Application.Commons.Repositories;
 using Coral.Domain;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Coral.Infrastructure.Persistent.Repositories
 {
@@ -30,9 +25,13 @@ namespace Coral.Infrastructure.Persistent.Repositories
             return result!;
         }
 
-        public Task<bool> DeleteTagAsync(string name, CancellationToken cancellation)
+        public async Task<bool> DeleteTagAsync(string name, CancellationToken cancellation)
         {
-            throw new NotImplementedException();
+            var category = await _tags.FirstOrDefaultAsync(x => x.Name.Equals(name));
+            if (category is null) return false;
+            _tags.Remove(category);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> FindAsync(string name, CancellationToken cancellation)
@@ -66,9 +65,17 @@ namespace Coral.Infrastructure.Persistent.Repositories
             return tag;
         }
 
-        public Task<Tag> UpdateTagAsync(string name, int tagId, CancellationToken cancellation)
+        public async Task<Tag> UpdateTagAsync(Tag tag, CancellationToken cancellation)
         {
-            throw new NotImplementedException();
+            var tagToUpdate = await _tags.FirstOrDefaultAsync(x => x.Id.Equals(tag.Id));
+            if(tagToUpdate != null)
+            {
+                tagToUpdate.Name = tag.Name.ToUpper();
+                tagToUpdate.Description = string.IsNullOrEmpty(tag.Description)? tagToUpdate.Description : tag.Description;
+                _tags.Update(tagToUpdate);
+                await _context.SaveChangesAsync();
+            }
+            return tagToUpdate!;
         }
     }
 }
