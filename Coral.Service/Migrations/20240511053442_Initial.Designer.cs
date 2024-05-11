@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coral.Service.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240510134520_Configuration")]
-    partial class Configuration
+    [Migration("20240511053442_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,79 @@ namespace Coral.Service.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Coral.Domain.Account", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BalanceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BalanceId")
+                        .IsUnique();
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("Accounts", "finance");
+                });
+
+            modelBuilder.Entity("Coral.Domain.AccountType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AccountTypes", "utility");
+                });
+
+            modelBuilder.Entity("Coral.Domain.Balance", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18, 6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Balances", "finance");
+                });
 
             modelBuilder.Entity("Coral.Domain.Budget", b =>
                 {
@@ -82,6 +155,9 @@ namespace Coral.Service.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Amount")
                         .HasPrecision(18, 6)
                         .HasColumnType("decimal(18, 6)");
@@ -101,11 +177,13 @@ namespace Coral.Service.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AccountId");
+
                     b.HasIndex("BudgetId");
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Expenses", (string)null);
+                    b.ToTable("Expenses", "finance");
                 });
 
             modelBuilder.Entity("Coral.Domain.Tag", b =>
@@ -128,6 +206,25 @@ namespace Coral.Service.Migrations
                     b.ToTable("Tags", "utility");
                 });
 
+            modelBuilder.Entity("Coral.Domain.Account", b =>
+                {
+                    b.HasOne("Coral.Domain.Balance", "Balance")
+                        .WithOne()
+                        .HasForeignKey("Coral.Domain.Account", "BalanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Coral.Domain.AccountType", "Type")
+                        .WithMany("Accounts")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Balance");
+
+                    b.Navigation("Type");
+                });
+
             modelBuilder.Entity("Coral.Domain.Budget", b =>
                 {
                     b.HasOne("Coral.Domain.Tag", "BudgetTag")
@@ -141,6 +238,12 @@ namespace Coral.Service.Migrations
 
             modelBuilder.Entity("Coral.Domain.Expense", b =>
                 {
+                    b.HasOne("Coral.Domain.Account", "Account")
+                        .WithMany("Expenses")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Coral.Domain.Budget", "Budget")
                         .WithMany("Expenses")
                         .HasForeignKey("BudgetId")
@@ -153,9 +256,21 @@ namespace Coral.Service.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Account");
+
                     b.Navigation("Budget");
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Coral.Domain.Account", b =>
+                {
+                    b.Navigation("Expenses");
+                });
+
+            modelBuilder.Entity("Coral.Domain.AccountType", b =>
+                {
+                    b.Navigation("Accounts");
                 });
 
             modelBuilder.Entity("Coral.Domain.Budget", b =>

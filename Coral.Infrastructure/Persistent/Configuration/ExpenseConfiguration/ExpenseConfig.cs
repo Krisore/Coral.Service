@@ -14,18 +14,23 @@ public class ExpenseConfig : IEntityTypeConfiguration<Expense>
     public void Configure(EntityTypeBuilder<Expense> builder)
     {
         builder.ToTable("Expenses", "finance");
-        builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id).IsRequired();
-        builder.Property(x => x.Description).IsRequired();
-        builder.Property(x => x.Amount).HasColumnType("decimal(18, 6)").HasPrecision(18, 6).IsRequired();
-        builder.Property(x => x.Date).IsRequired();
-        builder.HasOne(x => x.Category)
-            .WithMany(c => c.Expenses)
-            .HasForeignKey(x => x.CategoryId)
+        builder.HasKey(expense => expense.Id);
+        builder.Property(expense => expense.Id).IsRequired();
+        builder.Property(expense => expense.Description).IsRequired();
+        builder.Property(expense => expense.Amount).HasColumnType("decimal(18, 6)").HasPrecision(18, 6).IsRequired();
+        builder.Property(expense => expense.Date).IsRequired();
+
+        builder.HasOne(x => x.Account)
+               .WithMany(x => x.Expenses)
+               .HasForeignKey(x => x.AccountId);
+
+        builder.HasOne(expense => expense.Category)
+            .WithMany(category => category.Expenses)
+            .HasForeignKey(expense => expense.CategoryId)
             .IsRequired();
-        builder.HasOne(x => x.Budget)
-            .WithMany(b => b.Expenses)
-            .HasForeignKey(x => x.BudgetId)
+        builder.HasOne(expense => expense.Budget)
+            .WithMany(budget => budget.Expenses)
+            .HasForeignKey(expense => expense.BudgetId)
             .IsRequired();
     }
 

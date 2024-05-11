@@ -22,6 +22,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<Budget> Budgets => Set<Budget>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Tag> Tags => Set<Tag>();
+    public DbSet<Account> Accounts => Set<Account>();
+    public DbSet<AccountType> AccountTypes => Set<AccountType>();
+    public DbSet<Balance> Balances => Set<Balance>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
