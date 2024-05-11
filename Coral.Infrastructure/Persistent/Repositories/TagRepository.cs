@@ -4,25 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Coral.Infrastructure.Persistent.Repositories
 {
-    public class TagRepository : ITagRepository
+    public class TagRepository : Repository<Tag>, ITagRepository
     {
-        private readonly ApplicationDbContext _context;
         private readonly DbSet<Tag> _tags;
-        public TagRepository(ApplicationDbContext context)
+        public TagRepository(ApplicationDbContext context) :base(context)
         {
-            _context = context;
-            _tags = context.Tags;
-        }
-
-        public async Task<Tag> AddAsync(Tag tag, CancellationToken cancellation)
-        {
-            if(tag != null)
-            {
-                await _tags.AddAsync(tag, cancellation);
-                await _context.SaveChangesAsync(cancellation);
-            }
-            var result = await _tags.FirstOrDefaultAsync(t => t.Name.Equals(tag!.Name));
-            return result!;
+            _tags = context.Set<Tag>();
         }
 
         public async Task<bool> DeleteTagAsync(string name, CancellationToken cancellation)
@@ -30,7 +17,7 @@ namespace Coral.Infrastructure.Persistent.Repositories
             var category = await _tags.FirstOrDefaultAsync(x => x.Name.Equals(name));
             if (category is null) return false;
             _tags.Remove(category);
-            await _context.SaveChangesAsync();
+            await SaveAsync(cancellation);
             return true;
         }
 
@@ -73,7 +60,7 @@ namespace Coral.Infrastructure.Persistent.Repositories
                 tagToUpdate.Name = tag.Name.ToUpper();
                 tagToUpdate.Description = string.IsNullOrEmpty(tag.Description)? tagToUpdate.Description : tag.Description;
                 _tags.Update(tagToUpdate);
-                await _context.SaveChangesAsync();
+                await SaveAsync(cancellation);
             }
             return tagToUpdate!;
         }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Coral.Application.Features.TagManager.Commands.CreateTag;
 
-public record CreateTagCommand(string Name, string Description = "")
+public record CreateTagCommand(string Name, string Description)
     : IRequest<ErrorOr<CreateTagResponse>>;
 
 public class AddTagCommandHandler : IRequestHandler<CreateTagCommand, ErrorOr<CreateTagResponse>>
@@ -31,7 +31,8 @@ public class AddTagCommandHandler : IRequestHandler<CreateTagCommand, ErrorOr<Cr
 
         }, cancellationToken);
 
-        if (response is null) return Error.NotFound("Tag not added successfully");
-        return new CreateTagResponse(response.Name, true, $"{nameof(Tag)} : {response.Name} added successfully");
+        if (response is false) return Error.NotFound("Tag not added successfully");
+        await _tagRepository.SaveAsync(cancellationToken);
+        return new CreateTagResponse(request.Name, true, $"{nameof(Tag)} : {request.Name} added successfully");
     }
 }

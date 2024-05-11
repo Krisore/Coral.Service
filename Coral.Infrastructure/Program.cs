@@ -1,4 +1,5 @@
-﻿using Coral.Application.Commons.Repositories;
+﻿using Coral.Application.Common.Repositories;
+using Coral.Application.Commons.Repositories;
 using Coral.Infrastructure.Persistent;
 using Coral.Infrastructure.Persistent.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,9 @@ public static class Program
         services.AddDbContext<ApplicationDbContext>(option =>
             option.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
             b => b.MigrationsAssembly("Coral.Service")));
-
-
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<ITagRepository, TagRepository>();
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         return services;
     }
 }

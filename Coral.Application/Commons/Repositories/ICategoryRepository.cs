@@ -1,4 +1,5 @@
-﻿using Coral.Domain;
+﻿using Coral.Application.Common.Repositories;
+using Coral.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Coral.Application.Commons.Repositories
 {
-    public interface ICategoryRepository
+    public interface ICategoryRepository : IRepository<Category>
     {
         Task<Category> Add(Category category, CancellationToken cancellation);
         Task<bool> FindAsync(string categoryName, CancellationToken cancellation);

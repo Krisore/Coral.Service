@@ -1,4 +1,5 @@
-﻿using Coral.Domain;
+﻿using Coral.Application.Common.Repositories;
+using Coral.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace Coral.Application.Commons.Repositories
 {
-    public interface ITagRepository
+    public interface ITagRepository : IRepository<Tag>
     {
-        Task<Tag> AddAsync(Tag tag, CancellationToken cancellation);
         Task<bool> FindAsync(string name, CancellationToken cancellation);
         Task<IEnumerable<Tag>> GetTagsAsync(CancellationToken cancellation);
         Task<Tag> GetTagByNameAsync(string name, CancellationToken cancellation);

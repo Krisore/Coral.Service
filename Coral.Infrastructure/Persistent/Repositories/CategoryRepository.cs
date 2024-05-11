@@ -10,17 +10,19 @@ using System.Threading.Tasks;
 
 namespace Coral.Infrastructure.Persistent.Repositories;
 
-public class CategoryRepository(ApplicationDbContext context) : ICategoryRepository
+public class CategoryRepository : Repository<Category>, ICategoryRepository
 {
-    private readonly DbSet<Category> _categories = context.Categories;
-    private readonly ApplicationDbContext _context = context;
-
+    private readonly DbSet<Category> _categories;
+    public CategoryRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext)
+    {
+        _categories = applicationDbContext.Set<Category>();
+    }
     public async Task<Category> Add(Category category, CancellationToken cancellation)
     {
         if(category != null)
         {
             await _categories.AddAsync(category);
-            await _context.SaveChangesAsync();
+            await SaveAsync(cancellation);
         }
         return await _categories.FirstOrDefaultAsync(x => x.Name.Equals(category!.Name)) ?? null!;
     }
@@ -31,7 +33,7 @@ public class CategoryRepository(ApplicationDbContext context) : ICategoryReposit
         var category = await _categories.FirstOrDefaultAsync(x => x.Name.Equals(categoryName));
         if (category is null) return false;
         _categories.Remove(category);
-        await _context.SaveChangesAsync();
+        await SaveAsync(cancellation);
         return true;
     }
 
@@ -70,14 +72,14 @@ public class CategoryRepository(ApplicationDbContext context) : ICategoryReposit
         return category;
     }
 
-    public async Task<Category> UpdateCategoryName(string categoryName, int categoryId, CancellationToken cancellationToken)
+    public async Task<Category> UpdateCategoryName(string categoryName, int categoryId, CancellationToken cancellation)
     {
         var category = await _categories.FirstOrDefaultAsync(x => x.Id == categoryId);
         if(category is not null)
         {
             category.Name = categoryName;
             _categories.Update(category);
-            await _context.SaveChangesAsync();
+            await SaveAsync(cancellation);
             return category;
 
         }
