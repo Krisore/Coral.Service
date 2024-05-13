@@ -30,6 +30,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 #pragma warning restore CS8600
         if (existing is null) return false;
         _table.Remove(existing);
+        await SaveAsync(cancellation);
         return true;
     }
 

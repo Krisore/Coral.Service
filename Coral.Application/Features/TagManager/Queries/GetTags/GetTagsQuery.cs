@@ -29,6 +29,7 @@ namespace Coral.Application.Features.TagManager.Queries.GetTags
             {
                 Id = x.Id,
                 Name = x.Name,
+                Description = x.Description
             });
             return tags.ToList();
         }

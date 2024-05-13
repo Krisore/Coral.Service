@@ -14,8 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\AccountTypeManager\Validator\" />
-    <Folder Include="Features\AccountTypeManager\Queries\" />
     <Folder Include="Features\BudgetManager\Commands\" />
     <Folder Include="Features\BudgetManager\Validators\" />
     <Folder Include="Features\BudgetManager\Queries\" />

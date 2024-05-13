@@ -31,14 +31,17 @@ namespace Coral.Infrastructure.Persistent.Repositories
             return false;
         }
 
-        public async Task<IEnumerable<Tag>> GetTagsAsync(CancellationToken cancellation) => 
-            await _tags.Select(x =>
-                   new Tag()
-                   {
-                       Id = x.Id,
-                       Name = x.Name
-
-                   }).ToListAsync();
+        public async Task<IEnumerable<Tag>> GetTagsAsync(CancellationToken cancellation)
+        {
+            var tags = await _tags.Select(x =>
+                                           new Tag()
+                                           {
+                                               Id = x.Id,
+                                               Name = x.Name,
+                                               Description = x.Description
+                                           }).ToListAsync();
+            return tags;
+        }
         public async Task<Tag> GetTagByNameAsync(string name, CancellationToken cancellation)
         {
             var tag = await _tags.Select(x => new Tag()
