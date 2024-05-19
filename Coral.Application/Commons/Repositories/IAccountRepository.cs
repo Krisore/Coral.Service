@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace Coral.Application.Commons.Repositories
 {
-    public interface IAccountTypeRepository : IRepository<AccountType>
+    public interface IAccountRepository : IRepository<Account>
     {
-        Task<bool> CheckIfAccountTypeExistAsync(string name);
-        Task<AccountType> GetAccountTypeByName(string name);
+
     }
 }

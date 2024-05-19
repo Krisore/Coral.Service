@@ -4,6 +4,7 @@ using Coral.Infrastructure.Persistent;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coral.Service.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240519065008_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -192,12 +195,6 @@ namespace Coral.Service.Migrations
 
                             b1.Property<decimal>("Amount")
                                 .HasColumnType("decimal(18, 6)");
-
-                            b1.Property<DateTime>("BalanceAsOf")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("datetime2")
-                                .HasDefaultValue(new DateTime(2024, 5, 19, 15, 3, 50, 51, DateTimeKind.Local).AddTicks(2185))
-                                .HasColumnName("BalanceAsOf");
 
                             b1.Property<int>("Id")
                                 .HasColumnType("int")

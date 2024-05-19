@@ -17,6 +17,8 @@ public static class Program
         services.AddDbContext<ApplicationDbContext>(option =>
             option.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
             b => b.MigrationsAssembly("Coral.Service")));
+
+        services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<IAccountTypeRepository, AccountTypeRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<ITagRepository, TagRepository>();

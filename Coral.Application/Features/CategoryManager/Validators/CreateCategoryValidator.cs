@@ -25,7 +25,7 @@ namespace Coral.Application.Features.CategoryManager.Validators
 
         public async Task<bool> CheckCategory(string categoryName, CancellationToken cancellationToken)
         {
-            var existingCategory = await _categoryRepository.FindAsync(categoryName, cancellationToken);
+            var existingCategory = await _categoryRepository.CheckIfExist(categoryName, cancellationToken);
             return !existingCategory;
         }
 

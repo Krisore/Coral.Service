@@ -21,7 +21,8 @@ namespace Coral.Application.Features.AccountTypeManager.Validator
 
         private async Task<bool> CheckIfExist(string name, CancellationToken token)
         {
-            return await _accountTypeRepository.CheckIfAccountTypeExistAsync(name);
+            var response = await _accountTypeRepository.CheckIfAccountTypeExistAsync(name);
+            return !response;
         }
     }
 }

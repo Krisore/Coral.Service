@@ -33,21 +33,6 @@ namespace Coral.Service.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Balances",
-                schema: "finance",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Balances", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Categories",
                 schema: "utility",
                 columns: table => new
@@ -84,25 +69,17 @@ namespace Coral.Service.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    BalanceId = table.Column<int>(type: "int", nullable: false),
-                    TypeId = table.Column<int>(type: "int", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    AccountTypeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Accounts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Accounts_AccountTypes_TypeId",
-                        column: x => x.TypeId,
+                        name: "FK_Accounts_AccountTypes_AccountTypeId",
+                        column: x => x.AccountTypeId,
                         principalSchema: "utility",
                         principalTable: "AccountTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Accounts_Balances_BalanceId",
-                        column: x => x.BalanceId,
-                        principalSchema: "finance",
-                        principalTable: "Balances",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -128,6 +105,27 @@ namespace Coral.Service.Migrations
                         column: x => x.TagId,
                         principalSchema: "utility",
                         principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Balances",
+                schema: "finance",
+                columns: table => new
+                {
+                    AccountId = table.Column<int>(type: "int", nullable: false),
+                    BalanceId = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Balances", x => x.AccountId);
+                    table.ForeignKey(
+                        name: "FK_Balances_Accounts_AccountId",
+                        column: x => x.AccountId,
+                        principalSchema: "finance",
+                        principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -173,17 +171,10 @@ namespace Coral.Service.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Accounts_BalanceId",
+                name: "IX_Accounts_AccountTypeId",
                 schema: "finance",
                 table: "Accounts",
-                column: "BalanceId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Accounts_TypeId",
-                schema: "finance",
-                table: "Accounts",
-                column: "TypeId");
+                column: "AccountTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Budgets_TagId",
@@ -214,6 +205,10 @@ namespace Coral.Service.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Balances",
+                schema: "finance");
+
+            migrationBuilder.DropTable(
                 name: "Expenses",
                 schema: "finance");
 
@@ -232,10 +227,6 @@ namespace Coral.Service.Migrations
             migrationBuilder.DropTable(
                 name: "AccountTypes",
                 schema: "utility");
-
-            migrationBuilder.DropTable(
-                name: "Balances",
-                schema: "finance");
 
             migrationBuilder.DropTable(
                 name: "Tags",

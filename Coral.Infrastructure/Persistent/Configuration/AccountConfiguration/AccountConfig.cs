@@ -18,30 +18,19 @@ public class AccountConfig : IEntityTypeConfiguration<Account>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).IsRequired();
         builder.Property(x => x.Name).HasMaxLength(50).IsRequired();
-        builder.Property(x => x.Description).HasMaxLength(250).IsRequired();
+        builder.Property(x => x.Description).HasMaxLength(250).IsRequired(false);
+        builder.OwnsOne(x => x.Balance, balance =>
+        {
+            balance.WithOwner(b => b.Account)
+                .HasForeignKey(b => b.AccountId);
 
-        builder.HasOne(x => x.Balance)
-            .WithOne()
-            .HasForeignKey<Account>("BalanceId");
-        builder.HasOne(x => x.Type)
-            .WithMany()
-            .HasForeignKey(x => x.TypeId)
-            .IsRequired();
-
-
-    }
-}
-
-
-public class BalanceConfig : IEntityTypeConfiguration<Balance>
-{
-    public void Configure(EntityTypeBuilder<Balance> builder)
-    {
-        builder.ToTable("Balances", "finance");
-        builder.HasKey(x => x.Id); 
-        builder.Property(x => x.Id).IsRequired();
-        builder.Property(x => x.AccountId).IsRequired();
-        builder.Property(x => x.Amount).HasColumnType("decimal(18, 6)").IsRequired();
+            balance.Property(b => b.BalanceAsOf)
+                .HasColumnName("BalanceAsOf")
+                .HasDefaultValue(DateTime.Now);
+            balance.Property(b => b.Amount)
+                .HasColumnType("decimal(18, 6)")
+                .IsRequired();
+        });
     }
 }
 
@@ -50,14 +39,13 @@ public class AccountTypeConfig : IEntityTypeConfiguration<AccountType>
     public void Configure(EntityTypeBuilder<AccountType> builder)
     {
         builder.ToTable("AccountTypes", "utility");
-        builder.HasKey(x => x.Id); 
-        builder.Property(x => x.Id).IsRequired(); 
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id).IsRequired();
         builder.Property(x => x.Name).IsRequired();
-        builder.Property(x => x.Description).IsRequired(false); 
-
+        builder.Property(x => x.Description).IsRequired(false);
         builder.HasMany(x => x.Accounts)
-            .WithOne(a => a.Type)
-            .HasForeignKey(a => a.TypeId)
-            .IsRequired();
+               .WithOne(x => x.AccountType)
+               .HasForeignKey(x => x.AccountTypeId);
+
     }
 }

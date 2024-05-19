@@ -23,8 +23,6 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 
     public async Task<bool> DeleteAsync(object id, CancellationToken cancellation = default)
     {
-        
-        
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         TEntity existing = await _table.FindAsync(id);
 #pragma warning restore CS8600

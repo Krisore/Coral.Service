@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coral.Service.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240511053442_Initial")]
-    partial class Initial
+    [Migration("20240519070350_AddColumnToBalanceTableBalanceOf")]
+    partial class AddColumnToBalanceTableBalanceOf
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,11 +33,10 @@ namespace Coral.Service.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BalanceId")
+                    b.Property<int>("AccountTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
@@ -46,15 +45,9 @@ namespace Coral.Service.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("BalanceId")
-                        .IsUnique();
-
-                    b.HasIndex("TypeId");
+                    b.HasIndex("AccountTypeId");
 
                     b.ToTable("Accounts", "finance");
                 });
@@ -77,25 +70,6 @@ namespace Coral.Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AccountTypes", "utility");
-                });
-
-            modelBuilder.Entity("Coral.Domain.Balance", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18, 6)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Balances", "finance");
                 });
 
             modelBuilder.Entity("Coral.Domain.Budget", b =>
@@ -208,21 +182,44 @@ namespace Coral.Service.Migrations
 
             modelBuilder.Entity("Coral.Domain.Account", b =>
                 {
-                    b.HasOne("Coral.Domain.Balance", "Balance")
-                        .WithOne()
-                        .HasForeignKey("Coral.Domain.Account", "BalanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Coral.Domain.AccountType", "Type")
+                    b.HasOne("Coral.Domain.AccountType", "AccountType")
                         .WithMany("Accounts")
-                        .HasForeignKey("TypeId")
+                        .HasForeignKey("AccountTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Balance");
+                    b.OwnsOne("Coral.Domain.Balance", "Balance", b1 =>
+                        {
+                            b1.Property<int>("AccountId")
+                                .HasColumnType("int");
 
-                    b.Navigation("Type");
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18, 6)");
+
+                            b1.Property<DateTime>("BalanceAsOf")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("datetime2")
+                                .HasDefaultValue(new DateTime(2024, 5, 19, 15, 3, 50, 51, DateTimeKind.Local).AddTicks(2185))
+                                .HasColumnName("BalanceAsOf");
+
+                            b1.Property<int>("Id")
+                                .HasColumnType("int")
+                                .HasColumnName("BalanceId");
+
+                            b1.HasKey("AccountId");
+
+                            b1.ToTable("Balances", "finance");
+
+                            b1.WithOwner("Account")
+                                .HasForeignKey("AccountId");
+
+                            b1.Navigation("Account");
+                        });
+
+                    b.Navigation("AccountType");
+
+                    b.Navigation("Balance")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Coral.Domain.Budget", b =>

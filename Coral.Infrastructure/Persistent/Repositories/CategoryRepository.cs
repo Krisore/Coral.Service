@@ -37,7 +37,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
         return true;
     }
 
-    public async Task<bool> FindAsync(string categoryName, CancellationToken cancellationToken)
+    public async Task<bool> CheckIfExist(string categoryName, CancellationToken cancellationToken)
     {
         var response = await _categories.FirstOrDefaultAsync(x => x.Name.Equals(categoryName));
         if (response is not null)
@@ -53,7 +53,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
         new Category() 
         {
             Id = x.Id, 
-            Name = x.Name 
+            Name = x.Name
         }).ToListAsync();
 
         return catories;

@@ -2,6 +2,7 @@
 using Coral.Application.Features.AccountTypeManager.Commands.AddAccountType;
 using Coral.Application.Features.AccountTypeManager.Commands.DeleteAccountType;
 using Coral.Application.Features.AccountTypeManager.Commands.UpdateAccountType;
+using Coral.Application.Features.AccountTypeManager.Queries.GetAccountByName;
 using Coral.Application.Features.AccountTypeManager.Queries.GetAccountTypeById;
 using Coral.Application.Features.AccountTypeManager.Queries.GetAllAccountType;
 using Coral.Contract.AccountType.Response;
@@ -51,7 +52,7 @@ namespace Coral.Service.Controllers.Features
                 errors => Problem(errors));
         }
         [HttpGet("GetAccountTypeById")]
-        public async Task<IActionResult> GetAllAccountTypeAsync([FromQuery] int id)
+        public async Task<IActionResult> GetAccountTypeByIdAsync([FromQuery] int id)
         {
             var query = new GetAccountTypeByIdQuery(id);
             var response = await Mediator.Send(query);
@@ -59,5 +60,16 @@ namespace Coral.Service.Controllers.Features
                 response => Ok(response),
                 errors => Problem(errors));
         }
+        [HttpGet("GetAccountTypeByName")]
+        public async Task<IActionResult> GetAccountTypeByNameAsync([FromQuery] string name)
+        {
+            var query = new GetAccountByNameQuery(name);
+            var response = await Mediator.Send(query);
+            return response.Match<IActionResult>(
+                response => Ok(response),
+                errors => Problem(errors));
+        }
+
+
     }
 }

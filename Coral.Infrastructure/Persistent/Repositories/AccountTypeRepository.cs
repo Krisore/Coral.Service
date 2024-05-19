@@ -19,6 +19,12 @@ namespace Coral.Infrastructure.Persistent.Repositories
         }
 
         public async Task<bool> CheckIfAccountTypeExistAsync(string name) => await _accountType.AnyAsync(x => x.Name.Equals(name));
-        
+
+        public async Task<AccountType> GetAccountTypeByName(string name)
+        {
+            var _response = await _accountType.FirstOrDefaultAsync(x => x.Name.Equals(name));
+            if (_response == null) return new();
+            return _response;
+        }
     }
 }

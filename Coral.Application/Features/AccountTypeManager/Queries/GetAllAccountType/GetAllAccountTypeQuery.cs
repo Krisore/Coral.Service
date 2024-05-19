@@ -8,30 +8,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Coral.Application.Features.AccountTypeManager.Queries.GetAllAccountType
+namespace Coral.Application.Features.AccountTypeManager.Queries.GetAllAccountType;
+
+public record GetAllAccountTypeQuery() : IRequest<ErrorOr<IEnumerable<AccountTypeDto>>>;
+public class GetAllAccountTypeQueryHandler : IRequestHandler<GetAllAccountTypeQuery, ErrorOr<IEnumerable<AccountTypeDto>>>
 {
-    public record GetAllAccountTypeQuery() : IRequest<ErrorOr<IEnumerable<AccountTypeDto>>>;
+    private readonly IAccountTypeRepository _accountTypeRepository;
 
-
-    public class GetAllAccountTypeQueryHandler : IRequestHandler<GetAllAccountTypeQuery, ErrorOr<IEnumerable<AccountTypeDto>>>
+    public GetAllAccountTypeQueryHandler(IAccountTypeRepository accountTypeRepository)
     {
-        private readonly IAccountTypeRepository _accountTypeRepository;
-
-        public GetAllAccountTypeQueryHandler(IAccountTypeRepository accountTypeRepository)
+        _accountTypeRepository = accountTypeRepository;
+    }
+    public async Task<ErrorOr<IEnumerable<AccountTypeDto>>> Handle(GetAllAccountTypeQuery request, CancellationToken cancellationToken)
+    {
+        var response = await _accountTypeRepository.GetAllAsync(cancellationToken);
+        return response.Select( x => new AccountTypeDto() 
         {
-            _accountTypeRepository = accountTypeRepository;
-        }
-        public async Task<ErrorOr<IEnumerable<AccountTypeDto>>> Handle(GetAllAccountTypeQuery request, CancellationToken cancellationToken)
-        {
-            var response = await _accountTypeRepository.GetAllAsync(cancellationToken);
-            return response.Select( x => new AccountTypeDto() 
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Description = x.Description
+            Id = x.Id,
+            Name = x.Name,
+            Description = x.Description
 
-            }).ToList();
+        }).ToList();
 
-        }
     }
 }

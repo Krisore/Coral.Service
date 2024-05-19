@@ -14,11 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\AccountManager\Validators\" />
     <Folder Include="Features\BudgetManager\Commands\" />
     <Folder Include="Features\BudgetManager\Validators\" />
     <Folder Include="Features\BudgetManager\Queries\" />
     <Folder Include="Features\ExpenseManager\Queries\" />
-    <Folder Include="Features\AccountManager\" />
   </ItemGroup>
 
   <ItemGroup>
